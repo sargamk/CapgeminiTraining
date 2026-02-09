@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Restore') {
+            steps {
+                dir('Month1/Week4/jenkins') {
+                    bat 'dotnet restore'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('Month1/Week4/jenkins') {
+                    bat 'dotnet build --configuration Release'
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                dir('Month1/Week4/jenkins') {
+                    bat 'dotnet publish -c Release -o publish'
+                }
+            }
+        }
+
+        stage('Run') {
+            steps {
+                dir('Month1/Week4/jenkins/publish') {
+                    bat 'dotnet YCCeCalc.dll'
+                }
+            }
+        }
+    }
+}
